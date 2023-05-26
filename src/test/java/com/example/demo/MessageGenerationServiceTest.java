@@ -12,7 +12,7 @@ class MessageGenerationServiceTest {
 
     @Test
     void createMessage() {
-        var input = "Mike";
-        assertEquals(service.createMessage(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))), "Hello, Mike");
+        var input = "name=Mike, name1=Kim";
+        assertEquals(service.createMessage(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))), "Hello, Mike and Kim");
     }
 }

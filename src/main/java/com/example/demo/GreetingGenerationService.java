@@ -7,20 +7,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class GreetingGenerationService implements MessageGenerator {
 
-    private static String template = "Hello, #{name}";
-    private static String[] params = {"name"};
+    private static String template = "Hello, #{name} and #{name1}";
 
     @Override
     public String createMessage(InputStream inputStream) {
-        String result = template;
         Scanner scanner = new Scanner(inputStream);
-        for (var param : params) {
-            System.out.printf("%s=", param);
-            var value = scanner.nextLine();
-            result = result.replace("#{" + param + "}", value);
-        }
+        String params = scanner.nextLine();
         scanner.close();
-        System.out.println(result);
+
+        String result = template;
+        for (var s : params.split(",")) {
+            var index = s.indexOf("=");
+            result = result.replace("#{" + s.substring(0, index).trim() + "}", s.substring(index + 1).trim());
+        }
+
+        if (result.matches("\\#\\{\\\\w\\+\\}")) {
+            throw new RuntimeException("Not enough params");
+        }
+
         return result;
     }
 }
